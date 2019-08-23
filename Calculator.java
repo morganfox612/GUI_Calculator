@@ -6,8 +6,13 @@ import java.awt.event.ActionListener;
 
 public class Calculator extends JFrame implements ActionListener
 {
+  static JTextField textfield = new JTextField(null, 20);
+  static JFrame frame = new JFrame("MFJCEC CALCULATOR");
   private static JTextField inputBox;
-  Calculator(){}
+  String showing1, showing2, showing3;
+  Calculator(){
+    showing1 = showing2 = showing3 = "";
+  }
 
   public static void main(String[] args)
   {
@@ -16,18 +21,12 @@ public class Calculator extends JFrame implements ActionListener
 
   private static void createAndShowGUI()
   {
-    JFrame frame = new JFrame("MFJCEC CALCULATOR");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.pack();
-
-    // JLabel emptyLabel = new JLabel("");
-    // emptyLabel.setPreferredSize(new Dimension(400, 600));
-    // frame.getContentPane().add(emptyLabel, BorderLayout.CENTER);
 
     JPanel panel = new JPanel();
     Calculator calculator = new Calculator();
 
-    JTextField textfield = new JTextField(16);
     textfield.setEditable(false);
 
     JButton seven = new JButton("7");
@@ -46,7 +45,7 @@ public class Calculator extends JFrame implements ActionListener
     JButton multiply = new JButton("*");
     JButton divide = new JButton("/");
 
-    JButton equals = new JButton("                =               ");
+    JButton equals = new JButton("                     =                    ");
 
     JButton decimal = new JButton(".");
     JButton delete = new JButton("C");
@@ -73,6 +72,7 @@ public class Calculator extends JFrame implements ActionListener
     delete.addActionListener(calculator);
 
     //Adding Buttons to Our Panel
+    panel.add(textfield);
     panel.add(seven);
     panel.add(eight);
     panel.add(nine);
@@ -97,14 +97,65 @@ public class Calculator extends JFrame implements ActionListener
     panel.add(equals);
 
     //Setting Background to Pink
-    panel.setBackground(Color.green);
+    panel.setBackground(Color.pink);
 
     frame.add(panel);
-    frame.setSize(200, 500);
+    frame.setSize(200, 300);
     frame.show();
   }
   public void actionPerformed(ActionEvent e) {
-    
+    String s = e.getActionCommand();
+
+      if ((s.charAt(0) >= '0' && s.charAt(0) <= '9') || s.charAt(0) == '.') {
+          if (!showing2.equals(""))
+              showing3 = showing3 + s;
+          else
+              showing1 = showing1 + s;
+
+          textfield.setText(showing1 + showing2 + showing3);
+      }
+      else if (s.charAt(0) == 'C') {
+          showing1 = showing2 = showing3 = "";
+
+          textfield.setText(showing1 + showing2 + showing3);
+      }
+      else if (s.charAt(0) == '=') {
+          Double te;
+          if (showing2.equals("+"))
+              te = (Double.parseDouble(showing1) + Double.parseDouble(showing3));
+          else if (showing2.equals("-"))
+              te = (Double.parseDouble(showing1) - Double.parseDouble(showing3));
+          else if (showing2.equals("/"))
+              te = (Double.parseDouble(showing1) / Double.parseDouble(showing3));
+          else
+              te = (Double.parseDouble(showing1) * Double.parseDouble(showing3));
+
+          textfield.setText(showing1 + showing2 + showing3 + "=" + te);
+
+          showing1 = Double.toString(te);
+
+          showing2 = showing3 = "";
+      }
+      else {
+          if (showing2.equals("") || showing3.equals(""))
+              showing2 = s;
+          else {
+              Double te;
+              if (showing2.equals("+"))
+                  te = (Double.parseDouble(showing1) + Double.parseDouble(showing3));
+              else if (showing2.equals("-"))
+                  te = (Double.parseDouble(showing1) - Double.parseDouble(showing3));
+              else if (showing2.equals("/"))
+                  te = (Double.parseDouble(showing1) / Double.parseDouble(showing3));
+              else
+                  te = (Double.parseDouble(showing1) * Double.parseDouble(showing3));
+              showing1 = Double.toString(te);
+              showing2 = s;
+              showing3 = "";
+          }
+
+          textfield.setText(showing1 + showing2 + showing3);
+      }
     }
 
 }
